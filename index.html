@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" /> 
+<html>
+
+<head>
+<meta charset="utf-8" />
+<script src="../js/main.js"></script>
+
+<style>
+body {
+   background: url(back.PNG);
+   border: none;
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-color: #333333;
+   background-size: 100% 120%;
+}
+.myButton {
+   -moz-box-shadow:inset -1px -5pxd 27px 2px #fce2c1;
+   -webkit-box-shadow:inset -1px -5px 27px 2px #fce2c1;
+   box-shadow:inset -1px -5px 27px 2px #fce2c1;
+   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25));
+   background:-moz-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+   background:-webkit-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+   background:-o-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+   background:-ms-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+   background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
+   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
+   background-color:#ffc477;
+   -moz-border-radius:17px;
+   -webkit-border-radius:17px;
+   border-radius:17px;
+   border:1px solid #eeb44f;
+   display:inline-block;
+   cursor:pointer;
+   color:#000000;
+   font-family:Arial;
+   font-size:11px;
+   font-weight:bold;
+   padding:10px 15px;
+   text-decoration:none;
+   text-shadow:0px 0px 0px #cc9f52;
+}
+.img0btn {
+  background: url(0.png);
+  border: none;
+  background-size: cover;
+  background-repeat: none;
+  
+  -moz-border-radius:17px;
+   -webkit-border-radius:17px;
+   border-radius:20px;
+   border:1px solid #eeb44f;
+   display:inline-block;
+   cursor:pointer;
+   color:#000000;
+   font-family:Arial;
+   font-size:0px;
+   font-weight:bold;
+   padding:20px 20px;
+   text-decoration:none;
+   text-shadow:0px 0px 0px #cc9f52;
+}
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+var Size = new Number(6);
+var Moves = new Array();
+var reset=0;
+var sec=0;
+var TI=null;
+function NewGame()
+{
+   if(reset==1)
+      clearInterval(tid);
+   reset=1;
+   sec=0;
+   tid=setInterval(count,1000);
+   for(i = 0; i < Size * Size; i++){
+      document.forms[0].elements[i].value = 0;
+      document.forms[0].elements[i].style.backgroundImage = "url('0.png')";
+   }
+   
+   for(i = 0; i < 3 + 3 * document.forms[0].Difficulty.selectedIndex+1; i++){
+      NewValue(Math.floor(Math.random() * Size),Math.floor(Math.random() * Size),1);
+   }
+   Moves.length = document.forms[0].Score.value = 0;
+}
+
+function count()
+{
+   sec++;
+   document.forms[0].time.value=sec;
+ }
+function BackBtn(flag)
+{
+   while(flag-- && (i = Moves.pop()))
+      NewValue(parseInt(i.split("-")[0]),parseInt(i.split("-")[1]),1);
+   document.forms[0].Score.value = Moves.length;
+}
+
+function Clicked(x,y)
+{
+   NewValue(x,y,3);
+   document.forms[0].Score.value = Moves.push(x + "-" + y);
+   for(i = 0; i < Size * Size; i++)
+      if(parseInt(document.forms[0].elements[i].value))
+         return;
+   alert("Congraturation!! \n"+ "You Clicked Button " + Moves.length + "Times.\nIt took "+sec+"seconds. \n Press the Newgame!");
+   clearInterval(tid);
+}
+
+function NewValue(x,y,c)
+{
+   ChangeValue(x,y,c);
+   ChangeValue(x - 1,y,c);
+   ChangeValue(x + 1,y,c);
+   ChangeValue(x,y - 1,c);
+   ChangeValue(x,y + 1,c);
+}
+
+var i=0;
+function ChangeValue(x,y,c)
+{
+   if(x >= 0 && x < Size && y >= 0 && y < Size){
+         with(document.forms[0].elements[x + Size * y]) value = (parseInt(value) + c) & 3;
+         ChangeImage(x,y);
+   }
+}
+function ChangeImage(x,y)
+{
+   if(x >= 0 && x < Size && y >= 0 && y < Size){
+        var num = x + (Size * y);
+      var val = document.forms[0].elements[num].value;
+      if(val ==3)
+      {
+         document.forms[0].elements[num].style.backgroundImage = "url('3.png')";
+      }
+      else if(val ==2)
+      {
+         document.forms[0].elements[num].style.backgroundImage = "url('2.png')";
+      }
+      else if(val ==1)
+      {
+         document.forms[0].elements[num].style.backgroundImage = "url('1.png')";
+      }
+      else if(val ==0)
+      {
+         document.forms[0].elements[num].style.backgroundImage = "url('0.png')";
+      }
+   }
+}
+</script>
+</head>
+
+<BODY>
+<div Onload="NewGame()"></div>
+<div class="ui-page" id="main"></div>
+<center>
+ 
+<br>
+
+<input type="button" onClick="NewGame();" class="myButton" value="NewGame" name="qwert">
+<input type="button" onClick="BackBtn(-1);" class="myButton" value="Restart">
+<input type="button" onClick="BackBtn(1);" class="myButton" value="Undone">
+
+<form>
+<br><br>
+<script language="javascript">
+
+for(y = 0; y < Size; y++,window.document.write("<br>")){
+   for(x = 0; x < Size; x++){
+      window.document.write('<input type="button" class="img0btn" onClick="Clicked(' + x + ',' + y + ')">');
+   }
+ }
+
+      </script>
+<br><br>
+<select name="Difficulty" onChange="NewGame()">
+<option>Very Easy</option>
+<option>Easy</option>
+<option selected>Normal</option>
+<option>Hard</option>
+<option>Hell</option>
+</select>
+<br><br>
+<input type="text" name="Score" value="0" size="3" disabled>
+Time: <input type="text" name="time" size=3>
+</form>
+
+<pre><b>
+<font size="4" color ="black">
+Use tab to regulate the game difficulty!
+Make the value of all the buttons 0
+</font>
+
+</b></pre>
+</cetner>
+
+   <script src="./js/main.js"></script>
+</body>
+</html>
